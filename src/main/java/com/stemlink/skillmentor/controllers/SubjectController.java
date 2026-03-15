@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.security.access.prepost.PreAuthorize;
 
 import java.util.List;
 
@@ -42,6 +43,7 @@ public class SubjectController {
 //    }
 
     @PostMapping
+    @PreAuthorize("hasRole('ADMIN')")
     public Subject createSubject(@Valid @RequestBody SubjectDTO subjectDTO) {
         Subject subject = modelMapper.map(subjectDTO, Subject.class);
         return subjectService.addNewSubject(subjectDTO.getMentorId(), subject);

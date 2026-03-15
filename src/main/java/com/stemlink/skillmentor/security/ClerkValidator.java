@@ -86,7 +86,7 @@ public class ClerkValidator implements TokenValidator {
             if (decodedJWT == null) {
                 return null;
             }
-            return decodedJWT.getClaim("roles").asList(String.class);
+            return decodedJWT.getClaim("role").asList(String.class);
         } catch (Exception e) {
             log.error("Error extracting roles: {}", e.getMessage());
             return null;
