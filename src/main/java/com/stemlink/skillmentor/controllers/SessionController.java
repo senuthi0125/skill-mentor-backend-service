@@ -1,7 +1,7 @@
 package com.stemlink.skillmentor.controllers;
 
-
 import com.stemlink.skillmentor.dto.SessionDTO;
+import com.stemlink.skillmentor.dto.response.AdminSessionResponseDTO;
 import com.stemlink.skillmentor.dto.response.SessionResponseDTO;
 import com.stemlink.skillmentor.entities.Session;
 import com.stemlink.skillmentor.security.UserPrincipal;
@@ -15,6 +15,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @RestController
@@ -27,8 +28,8 @@ public class SessionController extends AbstractController {
     private final SessionService sessionService;
 
     @GetMapping
-    public List<Session> getAllSessions() {
-        return sessionService.getAllSessions();
+    public List<AdminSessionResponseDTO> getAllSessions() {
+        return sessionService.getAllAdminSessions();
     }
 
     @GetMapping("{id}")
@@ -46,12 +47,26 @@ public class SessionController extends AbstractController {
         return sessionService.updateSessionById(id, updatedSessionDTO);
     }
 
+    @PatchMapping("{id}/confirm-payment")
+    public Session confirmPayment(@PathVariable Long id) {
+        return sessionService.adminConfirmPayment(id);
+    }
+
+    @PatchMapping("{id}/complete")
+    public Session markComplete(@PathVariable Long id) {
+        return sessionService.adminMarkComplete(id);
+    }
+
+    @PatchMapping("{id}/meeting-link")
+    public Session setMeetingLink(@PathVariable Long id, @RequestBody Map<String, String> body) {
+        return sessionService.adminSetMeetingLink(id, body.get("meetingLink"));
+    }
+
     @DeleteMapping("{id}")
     public void deleteSession(@PathVariable Long id) {
         sessionService.deleteSession(id);
     }
 
-    // Enrollment endpoint for students to enroll in a session
     @PostMapping("/enroll")
     public ResponseEntity<SessionResponseDTO> enroll(
             @RequestBody SessionDTO sessionDTO,
